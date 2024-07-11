@@ -1,4 +1,4 @@
-# Copyright (c) 2012, 2024, Oracle and/or its affiliates.
+# Copyright (c) 2014, 2024, Oracle and/or its affiliates.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2.0, as
@@ -26,21 +26,24 @@
 # along with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-"""MySQL Connector/Python version information
+"""Custom Python types used by MySQL Connector/Python"""
+from __future__ import annotations
 
-The file version.py gets installed and is available after installation
-as mysql.connector.version.
-"""
+from typing import Type
 
-VERSION = (9, 0, 0, "", 1)
 
-# pylint: disable=consider-using-f-string
-if VERSION[3] and VERSION[4]:
-    VERSION_TEXT = "{0}.{1}.{2}{3}{4}".format(*VERSION)
-else:
-    VERSION_TEXT = "{0}.{1}.{2}".format(*VERSION[0:3])
-# pylint: enable=consider-using-f-string
+class HexLiteral(str):
+    """Class holding MySQL hex literals"""
 
-VERSION_EXTRA = ""
-LICENSE = "GPLv2 with FOSS License Exception"
-EDITION = ""  # Added in package names, after the version
+    charset: str = ""
+    original: str = ""
+
+    def __new__(cls: Type[HexLiteral], str_: str, charset: str = "utf8") -> HexLiteral:
+        hexed = [f"{i:02x}" for i in str_.encode(charset)]
+        obj = str.__new__(cls, "".join(hexed))
+        obj.charset = charset
+        obj.original = str_
+        return obj
+
+    def __str__(self) -> str:
+        return "0x" + self
