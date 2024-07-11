@@ -1,42 +1,41 @@
-import os
-import subprocess
-from collections.abc import Iterable
-from typing import Literal as L, Any, overload, TypedDict
+import math as math
 
 from numpy._pytesttester import PytestTester
 
-class _F2PyDictBase(TypedDict):
-    csrc: list[str]
-    h: list[str]
+from numpy import (
+    ndenumerate as ndenumerate,
+    ndindex as ndindex,
+)
 
-class _F2PyDict(_F2PyDictBase, total=False):
-    fsrc: list[str]
-    ltx: list[str]
+from numpy.version import version
+
+from numpy.lib import (
+    format as format,
+    mixins as mixins,
+    scimath as scimath,
+    stride_tricks as stride_tricks,
+    npyio as npyio,
+    array_utils as array_utils,
+)
+
+from numpy.lib._version import (
+    NumpyVersion as NumpyVersion,
+)
+
+from numpy.lib._arrayterator_impl import (
+    Arrayterator as Arrayterator,
+)
+
+from numpy._core.multiarray import (
+    add_docstring as add_docstring,
+    tracemalloc_domain as tracemalloc_domain,
+)
+
+from numpy._core.function_base import (
+    add_newdoc as add_newdoc,
+)
 
 __all__: list[str]
 test: PytestTester
 
-def run_main(comline_list: Iterable[str]) -> dict[str, _F2PyDict]: ...
-
-@overload
-def compile(  # type: ignore[misc]
-    source: str | bytes,
-    modulename: str = ...,
-    extra_args: str | list[str] = ...,
-    verbose: bool = ...,
-    source_fn: None | str | bytes | os.PathLike[Any] = ...,
-    extension: L[".f", ".f90"] = ...,
-    full_output: L[False] = ...,
-) -> int: ...
-@overload
-def compile(
-    source: str | bytes,
-    modulename: str = ...,
-    extra_args: str | list[str] = ...,
-    verbose: bool = ...,
-    source_fn: None | str | bytes | os.PathLike[Any] = ...,
-    extension: L[".f", ".f90"] = ...,
-    full_output: L[True] = ...,
-) -> subprocess.CompletedProcess[bytes]: ...
-
-def get_include() -> str: ...
+__version__ = version
